@@ -8,7 +8,7 @@
 #########################################################################
 ##	Reversion history
 ##	V0.1	25/08/2014	BaoJiwei / Initial version
-##  v0.2 	26/08/2014	BaoJiwei / Developed Baseline Algorithms
+##  v0.2 	26/08/2014	BaoJiwei / Developed Baseline Algorithms & FWHN Algorithms
 #########################################################################
 class FindPeaks():
 	"""find out baseline"""
@@ -40,7 +40,7 @@ class FindPeaks():
 	#deduction Baseline
 		for i in range(0,2048):
 			# if Spectrum is bigger than baseline cut baseline
-			if self.Spectrum[i]>self.baseline+400:
+			if self.Spectrum[i]>self.baseline+1000:
 				self.Spectrum[i]-=self.baseline
 			else:
 			# else let Spectrum = 0
@@ -82,12 +82,19 @@ class FindPeaks():
 		#input Peak's Index can get FWHM
 		self.Wavelength=list(Wavelength)
 		peakid=PeakIndex-1
-		Area=0.0
-		for i in range(self.PeakLeft[peakid],self.PeakRight[peakid]-1):
-			Area=Area+0.5*(Wavelength[i+1]-Wavelength[i])*(self.Spectrum[i+1]+self.Spectrum[i])
-			#PeakLeft & PeakRight are indexs of lists do not -1
-		Height=self.Spectrum[self.PeakPixel[peakid]]
-		FWHM=Area/Height
+	#	Area=0.0
+	#	for i in range(self.PeakLeft[peakid],self.PeakRight[peakid]-1):
+	#		Area=Area+0.5*(Wavelength[i+1]-Wavelength[i])*(self.Spectrum[i+1]+self.Spectrum[i])
+	#		#PeakLeft & PeakRight are indexs of lists do not -1
+	#	Height=self.Spectrum[self.PeakPixel[peakid]]
+	#	FWHM=Area/Height
+	#	self.FWHM=FWHM
+		Height=0.5*self.Spectrum[self.PeakPixel[peakid]-1]
+		temp=[]
+		for i in range(self.PeakLeft[peakid],self.PeakRight[peakid]):
+			if self.Spectrum[i]>Height:
+				temp.append(i)
+		FWHM=Wavelength[temp[-1]]-Wavelength[temp[0]-1]
 		self.FWHM=FWHM
 		return self.FWHM
 
