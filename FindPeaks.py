@@ -8,9 +8,9 @@
 #########################################################################
 ##	Reversion history
 ##	V0.1	25/08/2014	BaoJiwei / Initial version
-##      TODO:   ChangeName/Develop Baseline Argion
+##  v0.2 	26/08/2014	BaoJiwei / Developed Baseline Algorithms
 #########################################################################
-class GetBaseline():
+class FindPeaks():
 	"""find out baseline"""
 	def __init__(self):
 		self.baseline=0
@@ -27,24 +27,25 @@ class GetBaseline():
 		self.Spectrum=list(Spectrum)
 		a=min(self.Spectrum)
 		temp=[]
-		for i in range(int(a),30000,2000):	# every 2000 finds		
+		for i in range(int(a),30000,400):	# every 2000 finds		
 			c_temp=0
 			for n in range(0,2048):
-				if self.Spectrum[n]>i and self.Spectrum[n]<i+2000:
+				if self.Spectrum[n]>i and self.Spectrum[n]<i+400:
 					c_temp+=1
 			temp.append(c_temp)
-		self.baseline=int(a)+(1+temp.index(max(temp)))*2000
+		self.baseline=int(a)+(1+temp.index(max(temp)))*400
 		return self.baseline
 
 	def DeductionBaseline(self):
 	#deduction Baseline
 		for i in range(0,2048):
 			# if Spectrum is bigger than baseline cut baseline
-			if self.Spectrum[i]>self.baseline:
+			if self.Spectrum[i]>self.baseline+400:
 				self.Spectrum[i]-=self.baseline
 			else:
 			# else let Spectrum = 0
 				self.Spectrum[i]=0
+
 		return self.Spectrum
 
 	def FindPeaks(self):
